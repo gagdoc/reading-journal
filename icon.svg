@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="나의 독서 일기">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6e8d6"/>
+      <stop offset="100%" stop-color="#d9b48c"/>
+    </linearGradient>
+    <linearGradient id="book1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a56a43"/>
+      <stop offset="100%" stop-color="#7f4528"/>
+    </linearGradient>
+    <linearGradient id="book2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d7c3a2"/>
+      <stop offset="100%" stop-color="#b48c62"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="126" y="96" width="72" height="320" rx="18" fill="url(#book1)"/>
+  <rect x="214" y="72" width="90" height="344" rx="20" fill="#f9f4ec"/>
+  <rect x="318" y="122" width="70" height="294" rx="18" fill="url(#book2)"/>
+  <rect x="214" y="72" width="16" height="344" rx="8" fill="#d3c7b8"/>
+  <path d="M244 140h34a26 26 0 0 1 26 26v82a26 26 0 0 1-26 26h-34z" fill="#8c5430" opacity=".15"/>
+  <path d="M160 182h20" stroke="#f7efe4" stroke-width="12" stroke-linecap="round"/>
+  <path d="M160 214h20" stroke="#f7efe4" stroke-width="12" stroke-linecap="round"/>
+  <path d="M160 246h20" stroke="#f7efe4" stroke-width="12" stroke-linecap="round"/>
+  <path d="M344 182h18" stroke="#f8efe2" stroke-width="12" stroke-linecap="round"/>
+  <path d="M344 214h18" stroke="#f8efe2" stroke-width="12" stroke-linecap="round"/>
+  <path d="M344 246h18" stroke="#f8efe2" stroke-width="12" stroke-linecap="round"/>
+</svg>
