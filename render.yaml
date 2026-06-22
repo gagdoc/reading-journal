@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: reading-journal
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
