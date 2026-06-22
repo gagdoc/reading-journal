@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#8c5430" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="나의 독서 일기" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <title>나의 독서 일기</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="src/app.js"></script>
+  </head>
+  <body>
+    <main class="app">
+      <header class="app-header">
+        <div class="app-header__copy">
+          <p class="eyebrow">Reading Journal</p>
+          <h1>내가 읽은 책 목록</h1>
+          <p class="lede">
+            첫 화면에서는 읽은 책을 카드 다이어리처럼 빠르게 훑어볼 수 있고, 책 추가 버튼을 누르면
+            검색창이 열립니다.
+          </p>
+        </div>
+        <div class="header-actions">
+          <div class="header-stats">
+            <div class="stat">
+              <span id="entryCount">0</span>
+              <small>기록</small>
+            </div>
+            <div class="stat">
+              <span id="uniqueBookCount">0</span>
+              <small>책</small>
+            </div>
+            <div class="stat">
+              <span id="latestReadAt">-</span>
+              <small>최근 완독</small>
+            </div>
+          </div>
+          <button id="openComposerBtn" type="button">책 추가</button>
+        </div>
+      </header>
+
+      <section class="panel journal-panel">
+        <div class="section-head">
+          <div>
+            <h2>읽은 책</h2>
+            <p>최신 기록이 위로 오도록 카드 다이어리 형태로 정리됩니다.</p>
+          </div>
+        </div>
+        <div id="journalList" class="journal-grid"></div>
+      </section>
+    </main>
+
+    <div id="composerBackdrop" class="composer-backdrop" hidden></div>
+    <section id="composerPanel" class="composer-panel" hidden>
+      <div class="composer-shell">
+        <div class="composer-head">
+          <div>
+            <p class="eyebrow">Add Book</p>
+            <h2>책 검색과 기록</h2>
+            <p id="searchStatus" class="composer-status">책 제목이나 ISBN을 입력해 주세요.</p>
+          </div>
+          <button id="closeComposerBtn" type="button" class="ghost">닫기</button>
+        </div>
+
+        <div class="search-bar">
+          <input
+            id="bookQuery"
+            type="search"
+            placeholder="예: 태엽 감는 새, 978..."
+            autocomplete="off"
+          />
+          <button id="searchBtn" type="button">검색</button>
+        </div>
+
+        <div id="searchResults" class="search-results"></div>
+
+        <div class="composer-selected">
+          <div class="section-head">
+            <div>
+              <h3>선택한 책</h3>
+              <p>검색 결과에서 하나를 고르면 기록 입력이 열립니다.</p>
+            </div>
+          </div>
+          <div id="selectedBookView" class="selected-book empty card-shell"></div>
+        </div>
+
+        <form id="entryForm" class="form">
+          <div class="grid">
+            <label>
+              완독 날짜
+              <input name="date" type="date" disabled />
+            </label>
+            <label>
+              평점
+              <select name="rating" disabled>
+                <option value="">선택</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            태그 / 분위기
+            <input name="tags" type="text" placeholder="예: calm, 집중, 여운" disabled />
+          </label>
+
+          <label>
+            감상
+            <textarea
+              name="notes"
+              rows="6"
+              placeholder="책을 읽고 느낀 점, 기억에 남는 문장, 다음에 다시 읽고 싶은 이유를 적어보세요."
+              required
+              disabled
+            ></textarea>
+          </label>
+
+          <div class="actions">
+            <button id="saveBtn" type="submit" disabled>먼저 책을 선택해 주세요</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </body>
+</html>
