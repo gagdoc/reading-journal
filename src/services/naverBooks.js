@@ -33,6 +33,15 @@ export async function searchBooks(query, limit = 8) {
     return googleResponse;
   }
 
+  const trendingBooks = getCuratedTrendingBooks(normalized, limit);
+  if (trendingBooks.length) {
+    return {
+      books: trendingBooks,
+      status: "found",
+      message: "현재 참고용 인기 도서를 보여드립니다.",
+    };
+  }
+
   return lastResponse;
 }
 
@@ -303,4 +312,92 @@ function prioritizeQueryMatch(books, query) {
     const bExact = bTitle.includes(lower) ? 1 : 0;
     return bExact - aExact;
   });
+}
+
+function getCuratedTrendingBooks(query, limit) {
+  const lower = String(query || "").toLowerCase();
+  if (!/(베스트셀러|인기 도서|추천 도서|추천|인기|best|bestseller)/i.test(lower)) {
+    return [];
+  }
+
+  return [
+    {
+      source: "curated",
+      title: "불편한 편의점",
+      authors: ["김호연"],
+      publishYear: "2022",
+      cover: "",
+      isbn: "",
+      sourceUrl: "",
+      publisher: "나무옆의자",
+      priceStandard: "",
+      priceSales: "",
+      note: "Curated trending reference",
+    },
+    {
+      source: "curated",
+      title: "아몬드",
+      authors: ["손원평"],
+      publishYear: "2017",
+      cover: "",
+      isbn: "",
+      sourceUrl: "",
+      publisher: "창비",
+      priceStandard: "",
+      priceSales: "",
+      note: "Curated trending reference",
+    },
+    {
+      source: "curated",
+      title: "달러구트 꿈 백화점",
+      authors: ["이미예"],
+      publishYear: "2020",
+      cover: "",
+      isbn: "",
+      sourceUrl: "",
+      publisher: "팩토리나인",
+      priceStandard: "",
+      priceSales: "",
+      note: "Curated trending reference",
+    },
+    {
+      source: "curated",
+      title: "소년이 온다",
+      authors: ["한강"],
+      publishYear: "2014",
+      cover: "",
+      isbn: "",
+      sourceUrl: "",
+      publisher: "창비",
+      priceStandard: "",
+      priceSales: "",
+      note: "Curated trending reference",
+    },
+    {
+      source: "curated",
+      title: "채식주의자",
+      authors: ["한강"],
+      publishYear: "2007",
+      cover: "",
+      isbn: "",
+      sourceUrl: "",
+      publisher: "창비",
+      priceStandard: "",
+      priceSales: "",
+      note: "Curated trending reference",
+    },
+    {
+      source: "curated",
+      title: "작별하지 않는다",
+      authors: ["한강"],
+      publishYear: "2021",
+      cover: "",
+      isbn: "",
+      sourceUrl: "",
+      publisher: "문학동네",
+      priceStandard: "",
+      priceSales: "",
+      note: "Curated trending reference",
+    },
+  ].slice(0, limit);
 }
