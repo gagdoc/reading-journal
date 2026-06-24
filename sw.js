@@ -1,4 +1,4 @@
-const CACHE_NAME = "reading-journal-v2";
+const CACHE_NAME = "reading-journal-v3";
 
 function assetUrl(path) {
   return new URL(path, self.location).href;
@@ -7,15 +7,15 @@ function assetUrl(path) {
 const APP_SHELL = [
   assetUrl("./"),
   assetUrl("./index.html"),
-  assetUrl("./styles.css?v=15"),
-  assetUrl("./src/app.js?v=25"),
-  assetUrl("./src/config.js?v=7"),
-  assetUrl("./src/lib/date.js?v=7"),
-  assetUrl("./src/lib/storage.js?v=7"),
-  assetUrl("./src/lib/text.js?v=7"),
-  assetUrl("./src/state/journal.js?v=8"),
-  assetUrl("./src/services/naverBooks.js?v=8"),
-  assetUrl("./src/ui/render.js?v=10"),
+  assetUrl("./styles.css"),
+  assetUrl("./src/app.js"),
+  assetUrl("./src/config.js"),
+  assetUrl("./src/lib/date.js"),
+  assetUrl("./src/lib/storage.js"),
+  assetUrl("./src/lib/text.js"),
+  assetUrl("./src/state/journal.js"),
+  assetUrl("./src/services/naverBooks.js"),
+  assetUrl("./src/ui/render.js"),
   assetUrl("./manifest.webmanifest"),
   assetUrl("./icon.svg"),
   assetUrl("./apple-touch-icon.png"),
@@ -37,35 +37,16 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
-  const url = new URL(request.url);
+
+  if (request.url.includes("/api/books/search")) {
+    event.respondWith(fetch(request).catch(() => caches.match("/index.html")));
+    return;
+  }
 
   if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  if (request.destination === "script" || request.destination === "style" || /\.(js|css)$/i.test(url.pathname)) {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  if (url.pathname.includes("/api/books/search")) {
-    event.respondWith(fetch(request));
+    event.respondWith(fetch(request).catch(() => caches.match("/index.html")));
     return;
   }
 
   event.respondWith(caches.match(request).then((cached) => cached || fetch(request)));
 });
-
-async function networkFirst(request) {
-  try {
-    const response = await fetch(request);
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(request, response.clone());
-    return response;
-  } catch {
-    const cached = await caches.match(request);
-    if (cached) return cached;
-    return caches.match(assetUrl("./index.html"));
-  }
-}
