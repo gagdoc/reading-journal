@@ -44,9 +44,9 @@ async function fetchBooks(query, limit) {
 
   try {
     const response = await fetch(url);
-    const data = await response.json();
+    const data = await readJsonResponse(response);
 
-    if (!response.ok) {
+    if (!response.ok || !data) {
       return {
         books: [],
         status: "network",
@@ -70,6 +70,27 @@ async function fetchBooks(query, limit) {
       status: "network",
       message: error?.message || "도서 검색을 불러오지 못했습니다.",
     };
+  }
+}
+
+async function readJsonResponse(response) {
+  if (!response) return null;
+
+  const contentType = response.headers.get("content-type") || "";
+  const bodyText = await response.text();
+
+  if (!bodyText.trim()) {
+    return null;
+  }
+
+  if (!contentType.includes("application/json") && !contentType.includes("+json")) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(bodyText);
+  } catch {
+    return null;
   }
 }
 
