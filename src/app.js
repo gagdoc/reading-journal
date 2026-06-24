@@ -2,7 +2,7 @@ import { STORAGE_KEYS } from "./config.js?v=7";
 import { loadJSON, saveJSON } from "./lib/storage.js?v=7";
 import { parseTags, escapeHtml } from "./lib/text.js?v=7";
 import { formatKoreanDate, getTodayISO } from "./lib/date.js?v=7";
-import { searchBooks } from "./services/naverBooks.js?v=8";
+import { searchBooks } from "./services/naverBooks.js?v=9";
 import { createEntry, filterEntries, getJournalStats } from "./state/journal.js?v=8";
 import { renderEntries, renderSearchResults, renderSelectedBook } from "./ui/render.js?v=10";
 
@@ -869,6 +869,6 @@ function setStatus(message, tone = "info") {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
+    navigator.serviceWorker.register(new URL("../sw.js", import.meta.url)).catch(() => {});
   });
 }
