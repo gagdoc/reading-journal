@@ -28,6 +28,11 @@ export async function searchBooks(query, limit = 8) {
     return fallbackResponse;
   }
 
+  const googleResponse = await fetchGoogleBooks(normalized, limit);
+  if (googleResponse.books.length) {
+    return googleResponse;
+  }
+
   return lastResponse;
 }
 
@@ -111,6 +116,51 @@ async function fetchOpenLibraryBooks(query, limit) {
   }
 }
 
+async function fetchGoogleBooks(query, limit) {
+  const url = new URL("https://www.googleapis.com/books/v1/volumes");
+  const compactIsbn = query.replace(/[\s-]/g, "");
+  const looksLikeIsbn = /^[\dXx]{8,17}$/.test(compactIsbn);
+
+  if (looksLikeIsbn) {
+    url.searchParams.set("q", `isbn:${compactIsbn}`);
+  } else {
+    url.searchParams.set("q", query);
+  }
+  url.searchParams.set("maxResults", String(limit * 2));
+  url.searchParams.set("printType", "books");
+  url.searchParams.set("projection", "lite");
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        books: [],
+        status: "network",
+        message: "Google Books 책 검색을 불러오지 못했습니다.",
+      };
+    }
+
+    const books = Array.isArray(data.items) ? data.items.map(normalizeGoogleBook).filter(Boolean) : [];
+    const filtered = prioritizeQueryMatch(books, query).slice(0, limit);
+
+    return {
+      books: filtered,
+      status: filtered.length ? "found" : "empty",
+      message: filtered.length
+        ? `Google Books에서 ${filtered.length}권을 찾았습니다.`
+        : "검색 결과가 없습니다. 책 제목이나 ISBN을 조금 더 정확하게 입력해 보세요.",
+    };
+  } catch (error) {
+    return {
+      books: [],
+      status: "network",
+      message: error?.message || "Google Books 책 검색을 불러오지 못했습니다.",
+    };
+  }
+}
+
 function buildQueryCandidates(query) {
   const candidates = [query];
   const compactQuery = query.replace(/[\s-]+/g, "");
@@ -169,6 +219,30 @@ function normalizeOpenLibraryBook(item) {
     priceStandard: "",
     priceSales: "",
     note: "Open Library search result",
+  };
+}
+
+function normalizeGoogleBook(item) {
+  if (!item?.volumeInfo) return null;
+
+  const info = item.volumeInfo;
+  const identifier = Array.isArray(info.industryIdentifiers)
+    ? info.industryIdentifiers.find((entry) => entry?.identifier)?.identifier || ""
+    : "";
+  const cover = info.imageLinks?.thumbnail || info.imageLinks?.smallThumbnail || "";
+
+  return {
+    source: "google-books",
+    title: stripHtml(info.title || ""),
+    authors: Array.isArray(info.authors) ? info.authors.map((part) => stripHtml(part).trim()).filter(Boolean) : [],
+    publishYear: info.publishedDate ? String(info.publishedDate).slice(0, 4) : "",
+    cover,
+    isbn: identifier,
+    sourceUrl: info.infoLink || "",
+    publisher: stripHtml(info.publisher || ""),
+    priceStandard: "",
+    priceSales: "",
+    note: "Google Books search result",
   };
 }
 
