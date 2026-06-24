@@ -27,6 +27,9 @@ This file is the project memory for the reading journal app. Every new session s
 - The app now uses a search-first flow: find related books, select one, then write the diary entry.
 - The diary form stays disabled until a book is selected to keep the interaction clear.
 - Naver Book Search is now the primary metadata source, with a local proxy server to protect API credentials.
+- Render is the preferred deployment target for iPhone testing because it gives the app a public HTTPS URL.
+- The home screen now keeps reading stats light and moves optional reference content into a separate panel.
+- JSON export/import is the preferred recovery path for backups instead of relying on the browser alone.
 
 ## Working Rules For Future Sessions
 1. Read this file first.
